@@ -11,7 +11,8 @@
 <meta property="og:image" content="https://gcwebdesigner1-sudo.github.io/lnj-roofing/img/hero-sm.webp">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/png" href="img/logo.png">
-<link rel="preload" as="image" href="img/hero.webp" media="(min-width: 901px)">
+<link rel="preload" as="image" href="img/hero.webp" media="(min-width: 901px) and (max-width: 1920px)">
+<link rel="preload" as="image" href="img/hero-xl.webp" media="(min-width: 1921px)">
 <link rel="preload" as="image" href="img/hero-sm.webp" media="(max-width: 900px)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,7 +59,8 @@
     <div class="hero-media" id="heroMedia">
       <picture>
         <source media="(max-width: 900px)" srcset="img/hero-sm.webp">
-        <img src="img/hero.webp" alt="L&amp;J crew finishing a new shingle roof ridge above a wooded yard" fetchpriority="high">
+        <source media="(min-width: 1921px)" srcset="img/hero-xl.webp">
+        <img src="img/hero.webp" width="1920" height="1200" alt="Finished L&amp;J shingle roof with a new ridge cap, surrounded by fall color" fetchpriority="high">
       </picture>
     </div>
     <div class="hero-shade"></div>
