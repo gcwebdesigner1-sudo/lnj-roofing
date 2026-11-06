@@ -21,6 +21,7 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
+a,button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 h2,h3{margin:0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .wrap{max-width:1240px;margin:0 auto;padding:0 var(--pad)}
@@ -232,6 +233,8 @@ dd a:hover{color:#b5651d}
   .links{position:fixed;inset:0;background:rgba(10,12,15,.97);flex-direction:column;justify-content:center;gap:26px;opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
   .links a{font-family:var(--display);font-size:2.2rem;letter-spacing:.04em;font-weight:400;transform:translateY(16px);transition:transform .6s var(--ease)}
   .menu-open .links{opacity:1;pointer-events:auto}
+  /* backdrop-filter would trap the fixed overlay inside the bar */
+  .menu-open .nav,.menu-open .nav.solid{backdrop-filter:none;-webkit-backdrop-filter:none;background:transparent;box-shadow:none}
   .menu-open .links a{transform:none}
   .links .nav-phone{max-width:none;opacity:1;margin:10px 0 0;font-family:var(--body);font-size:1.1rem;font-weight:800;padding:14px 26px}
   .stats{grid-template-columns:repeat(2,1fr)}
@@ -243,6 +246,10 @@ dd a:hover{color:#b5651d}
   .callbar svg{width:20px;height:20px;fill:currentColor}
   .callbar.show{transform:none}
   .foot{padding-bottom:110px}
+  /* thumb-sized tap areas */
+  .foot nav a{display:inline-block;padding:12px 0}
+  dd a{display:inline-block;padding:12px 0;margin:-8px 0}
+  .brand{padding:6px 0;min-height:44px}
 }
 @media (max-width:600px){
   body{font-size:16px}
@@ -256,6 +263,26 @@ dd a:hover{color:#b5651d}
   .work-track{height:min(58vh,480px);gap:12px}
   .work-track .tall,.work-track .wide{aspect-ratio:auto;width:78vw}
   .map{height:300px}
+}
+
+@media (max-width:400px){
+  .sub{white-space:nowrap;font-size:.7rem;letter-spacing:.2em;padding-left:.2em;gap:8px}
+  .sub::before,.sub::after{width:16px}
+  .contact-info dd{font-size:.9rem}
+}
+@media (max-width:340px){
+  .sub::before,.sub::after{display:none}
+}
+/* phones turned sideways: shorter screen, keep everything visible */
+@media (max-height:500px) and (orientation:landscape){
+  .hero{min-height:100svh}
+  .hero-inner{padding-top:64px;padding-bottom:16px}
+  .wm{font-size:min(46vh,25rem)}
+  .btn-quote{margin-top:14px;padding:14px 28px}
+  .hero-phone{margin-top:10px;font-size:1.2rem}
+  .work-track{height:62vh}
+  .work-head h2{font-size:2.6rem}
+  .work-sticky{gap:12px}
 }
 
 /* ---------- REDUCED MOTION ---------- */

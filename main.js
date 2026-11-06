@@ -11,34 +11,43 @@
 
   /* mobile menu */
   var burger = $('#burger');
-  burger.addEventListener('click', function () {
-    var open = document.body.classList.toggle('menu-open');
+  function setMenu(open) {
+    document.body.classList.toggle('menu-open', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
     burger.setAttribute('aria-expanded', open);
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
+  }
+  burger.addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open')); });
   document.querySelectorAll('.links a').forEach(function (a) {
-    a.addEventListener('click', function () {
-      document.body.classList.remove('menu-open');
-      burger.setAttribute('aria-expanded', 'false');
-    });
+    a.addEventListener('click', function () { setMenu(false); });
   });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
 
-  /* horizontal gallery sizing */
-  var trackDist = 0;
-  function sizeWork() {
+  /* horizontal gallery sizing.
+     Heights come from elements sized in svh, not window.innerHeight, so the
+     phone address bar showing/hiding never changes the layout mid-scroll. */
+  var hero = $('#top'), sticky = work.querySelector('.work-sticky'), contact = $('#contact');
+  var trackDist = 0, stickyH = 0, lastW = 0;
+  function sizeWork(force) {
     if (reduce) { work.style.height = ''; return; }
-    trackDist = Math.max(0, track.scrollWidth - window.innerWidth);
-    work.style.height = (window.innerHeight + trackDist) + 'px';
+    var w = document.documentElement.clientWidth;
+    if (!force && w === lastW && trackDist) return;   // height-only resize = address bar, ignore
+    lastW = w;
+    stickyH = sticky.offsetHeight;
+    trackDist = Math.max(0, track.scrollWidth - w);
+    work.style.height = (stickyH + trackDist) + 'px';
   }
 
   /* scroll-linked frame */
   var ticking = false;
   function frame() {
     ticking = false;
-    var y = window.scrollY, vh = window.innerHeight;
+    var y = window.scrollY, vh = hero.offsetHeight;
 
     nav.classList.toggle('solid', y > 40);
-    callbar.classList.toggle('show', y > vh * 0.8);
+    var cr = contact.getBoundingClientRect();
+    var nearForm = cr.top < window.innerHeight && cr.bottom > 0;
+    callbar.classList.toggle('show', y > vh * 0.8 && !nearForm);
 
     // active nav link
     var current = -1;
@@ -65,7 +74,7 @@
 
     // pinned horizontal work strip
     var wr = work.getBoundingClientRect();
-    var span = wr.height - vh;
+    var span = wr.height - stickyH;
     var wp = span > 0 ? Math.min(Math.max(-wr.top / span, 0), 1) : 0;
     track.style.transform = 'translate3d(' + (-wp * trackDist) + 'px,0,0)';
     workBar.style.transform = 'scaleX(' + wp + ')';
@@ -74,11 +83,12 @@
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () { sizeWork(); onScroll(); });
-  window.addEventListener('load', function () { sizeWork(); onScroll(); });
+  window.addEventListener('orientationchange', function () { setTimeout(function () { sizeWork(true); onScroll(); }, 300); });
+  window.addEventListener('load', function () { sizeWork(true); onScroll(); });
   track.querySelectorAll('img').forEach(function (img) {
-    if (!img.complete) img.addEventListener('load', sizeWork);
+    if (!img.complete) img.addEventListener('load', function () { sizeWork(true); });
   });
-  sizeWork(); frame();
+  sizeWork(true); frame();
 
   /* reveal + counters */
   function count(el) {
